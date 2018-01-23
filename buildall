@@ -1,0 +1,7 @@
+gcc -Wall -c main.c 
+gcc -Wall -c strang.c
+
+gcc -Wall main.c strang.c -o stranghantering
+
+
+rm *.o

@@ -1,4 +1,4 @@
-/*Rasmus Lennartsson 2017*/
+/*Rasmus Lennartsson 2017-2018*/
 
 
 
@@ -7,17 +7,6 @@
 #include <ctype.h>
 
 #define STRINGMAX 1024
-
-int getLine(char *dummyChar, int size, int wantInt);
-void concStr(char* sp, char* dummyChar, char* newString);
-void addBlank(char* sp, char* newString);
-int strangLen(char* sp);
-int compStrang(char* sp, char* compString);
-void flipStrang(char* sp);
-void shiftStrangLeft(char* sp);
-void shiftStrangRight(char* sp);
-void commonToCapital(char* sp);
-void copyString(char* sp, char* dummyChar);
 
 
 int strangLen(char* sp){
@@ -30,6 +19,7 @@ int strangLen(char* sp){
 	return size;
 }
 
+// sp = destination dummyChar = source
 void copyString(char* sp, char* dummyChar){
 	int size = strangLen(dummyChar), i;
 	char* spCopy = sp;
@@ -54,7 +44,7 @@ void commonToCapital(char* sp){
 			ascii -= 32;
 			*sp++ = (char)ascii;
 		}else{
-			*sp++;
+			// *sp++;
 		}
 	}
 
@@ -190,7 +180,7 @@ void addBlank(char* sp, char* newString){
 
 int compStrang(char* sp, char* compString){
 	// printf("%s\n", sp);
-	int spSize = strangLen(sp), compSize = strangLen(compString), commonLow = 97, commonHigh = 122, result, capitalLow = 65, capitalHigh = 90, c, o;
+	int spSize = strangLen(sp), compSize = strangLen(compString), result, capitalLow = 65, capitalHigh = 90, c, o;
 	char *spCopy = sp, *compCopy = compString;
 
 	//o = original string
@@ -244,60 +234,49 @@ void cleanseBuffer(){
 		;
 }
 
-// Just nu funkar den precis som den ska, är lite lång och otymplig samt skulle kunna minimeras och göras bättre, har tyvärr dock inte tid utan blir ett 
-// projekt i framtida kurser, tror den är överkurs som den är redan!
-int getLine(char *dummyChar, int size, int wantInt){
-	int n = 0, digit = 0;
-	char c, eol = '\n';
+// Can be used in combination with atoi to get integers from input.
+char* getLine(int size){
+	int n = 0;
+	char c, eol = '\n', *buff, *returnBuff, *buffCopy;
 
+	buff = malloc(size * sizeof(char) + 1);
+	buffCopy = buff;
 
+	printf("\nInput: ");
 	while(c != eol){
 		c = getchar();
 
-		//Want to have digits only.
-		if(wantInt == 1){
-			digit = isdigit(c); 
-
-			//Check if space left
-			if(n < (size)){
-				if(c == eol){
-					*dummyChar = '\0';
-				}else{
-					if(digit != 0){
-						*dummyChar++ = c;
-						n++;
-
-					}else{
-						if(c != eol){
-							cleanseBuffer();
-						}
-						return -1;
-					}
-				}
+		// Check if space availiable.
+		if(n <= size){
+			if(c == eol){
+				*buff = '\0';
 			}else{
-				if(c != eol){
-					cleanseBuffer();
-				}
-				return -1;
+				*buff++ = c;
+				n++;
 			}
-		// Regular character input.
 		}else{
-			// Check if space availiable.
-			if(n < (size)){
-				if(c == eol){
-					*dummyChar = '\0';
-				}else{
-					*dummyChar++ = c;
-					n++;
-				}
-			}else{
-				if(c != eol){
-					cleanseBuffer();
-				}
-				return -1;
+			if(c != eol){
+				cleanseBuffer();
 			}
+			printf("\nToo much input, maximum is: %d\nPlease type again!\n", size);
+			printf("\nInput: ");
+
+			// Exception handling as the size+1:th input might be '\0' which would make the while loop end.
+			if(n == size+1){
+				c = ' ';
+			}
+			n = 0;
+			buff = buffCopy;
 		}
 	}
-	//Return the number of entered characters.
-	return n;
+
+	buff = buffCopy;
+	n = strangLen(buff);
+	returnBuff = malloc(n * sizeof(char) + 1);
+
+	copyString(returnBuff, buff);
+	free(buff);
+
+	//Return result
+	return returnBuff;
 }

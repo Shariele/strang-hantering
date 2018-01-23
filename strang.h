@@ -1,0 +1,10 @@
+char* getLine(int size);
+void concStr(char* sp, char* dummyChar, char* newString);
+void addBlank(char* sp, char* newString);
+int strangLen(char* sp);
+int compStrang(char* sp, char* compString);
+void flipStrang(char* sp);
+void shiftStrangLeft(char* sp);
+void shiftStrangRight(char* sp);
+void commonToCapital(char* sp);
+void copyString(char* sp, char* dummyChar);
